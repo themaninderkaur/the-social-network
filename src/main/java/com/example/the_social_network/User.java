@@ -69,9 +69,12 @@ public class User {
     public void signUp() {
         String user;
         String pass;
+        String email; // Declare the email variable
         boolean userValid = false;
         boolean passValid = false;
+        boolean emailValid = false;
 
+        // Username validation
         do {
             System.out.println("Enter a username. Usernames must be 6-30 characters long and contain only letters/numbers.");
             user = s.nextLine();
@@ -90,6 +93,7 @@ public class User {
             }
         } while (!userValid);
 
+        // Password validation
         do {
             System.out.println("Enter a password. Passwords must be 8-128 characters, and can only be made out of letters/numbers.");
             pass = s.nextLine();
@@ -98,22 +102,56 @@ public class User {
                 System.out.println("Passwords must be at least 8 characters long.");
             } else if (pass.length() > 128) {
                 System.out.println("Passwords must be less than 128 characters long.");
+            } else if (!pass.matches("([A-Za-z0-9])*")) {
+                System.out.println("Password must consist only of letters and numbers.");
             } else {
                 password = pass;
                 passValid = true;
             }
         } while (!passValid);
 
+        // Email validation
+// Email validation
+        do {
+            System.out.println("Enter your email address.");
+            email = s.nextLine();
+
+            // Check if the email is valid and unique
+            if (email.isEmpty() || !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                System.out.println("Please enter a valid email address.");
+            } else if (isEmailTaken(email)) { // Check if the email is already in use
+                System.out.println("Email is already taken.");
+            } else {
+                emailValid = true;
+            }
+        } while (!emailValid); //makes sure its valid
+
+        // Database insertion
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement("INSERT INTO Users (username, pass, email) VALUES (?, ?, ?)")) {
             stmt.setString(1, username);
             stmt.setString(2, password);
-            stmt.setString(3, email);
+            stmt.setString(3, email); // Use the email variable here
             stmt.executeUpdate();
             System.out.println("User  created.");
         } catch (SQLException e) {
             System.out.println("Error creating user: " + e.getMessage());
         }
+    }
+
+    // Method to check if the email is already taken
+    private boolean isEmailTaken(String email) {
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM Users WHERE email = ?")) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Return true if the email count is greater than 0
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking email: " + e.getMessage());
+        }
+        return false; // Return false if there was an error or the email is not taken
     }
 
     private boolean findUser (String username) {
@@ -124,7 +162,7 @@ public class User {
             return rs.next(); // Returns true if a user with the given username exists
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return false; //comment new
         }
     }
 
