@@ -13,9 +13,9 @@ public class User {
     private final ArrayList<String> friendsList = new ArrayList<>();
 
     // Database connection details
-    private static final String DB_URL = "jdbc:mysql://Maninders-MacBook-Pro.local:3306/social_network"; // Change to your database name
-    private static final String DB_USER = "root"; // Change to your database username
-    private static final String DB_PASSWORD = "109400"; // Change to your database password
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/social_network"; // Change to your database name
+    private static final String DB_USER = "accessuser"; // Change to your database username
+    private static final String DB_PASSWORD = "12345"; // Change to your database password
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -111,7 +111,6 @@ public class User {
         } while (!passValid);
 
         // Email validation
-// Email validation
         do {
             System.out.println("Enter your email address.");
             email = s.nextLine();
@@ -162,7 +161,7 @@ public class User {
             return rs.next(); // Returns true if a user with the given username exists
         } catch (SQLException e) {
             e.printStackTrace();
-            return false; //comment new
+            return false;
         }
     }
 
