@@ -57,11 +57,35 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public ArrayList<String> getBlockedList() {
-        return blockedList;
+    public ArrayList<String> getBlocked() {
+        ArrayList<String> blockedUsers = new ArrayList<>();
+        String sql = "SELECT blockedUser  FROM BlockedUsers WHERE user = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                blockedUsers.add(rs.getString("blockedUser "));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving blocked users list: " + e.getMessage());
+        }
+        return blockedUsers;
     }
 
-    public ArrayList<String> getFriendsList() {
-        return friendsList;
+    public ArrayList<String> getFriends() {
+        ArrayList<String> friends = new ArrayList<>();
+        String sql = "SELECT friend FROM Friends WHERE user = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                friends.add(rs.getString("friend"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving friends list: " + e.getMessage());
+        }
+        return friends;
     }
 }
