@@ -316,22 +316,6 @@ public class User {
         }
     }
 
-    public ArrayList<String> getFriends() {
-        ArrayList<String> friends = new ArrayList<>();
-        String sql = "SELECT friend FROM Friends WHERE user = ?";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                friends.add(rs.getString("friend"));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error retrieving friends list: " + e.getMessage());
-        }
-        return friends;
-    }
-
     // Blocking Methods with Database Persistence
     public boolean addBlockedUser (String blockUsername) {
         String sql = "INSERT INTO BlockedUsers (user, blockedUser ) VALUES (?, ?)";
@@ -362,28 +346,4 @@ public class User {
         }
     }
 
-    // Getters and Setters
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUser () {
-        return username;
-    }
-
-    public void setUser (String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
