@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class User {
+public class UserServer implements Runnable {
     private String username;
     private String password;
     private String email;
@@ -17,13 +17,13 @@ public class User {
     private static final String DB_USER = "accessuser"; // Change to your database username
     private static final String DB_PASSWORD = "12345"; // Change to your database password
 
-    public User(String username, String password, String email) {
+    public UserServer (String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
     }
 
-    public User() {
+    public UserServer() {
         this.username = "";
         this.password = "";
     }
@@ -166,9 +166,7 @@ public class User {
     }
 
     public static void main(String[] args) {
-        User n = new User();
-        n.signUp();
-        n.login();
+        User n = new User(); //test comment
     }
 
     public boolean removeBlockedUser (String user) {
@@ -267,9 +265,10 @@ public class User {
     }
 
     public String userViewer(String username) {
-        User user = findProfile(username);
-        if (user != null) {
-            return "Username: " + user.getUser () + ", Email: " + user.getEmail();
+        User n = new User();
+        User usern = findProfile(username);
+        if (usern != null) {
+            return "Username: " + n.getUsername() + ", Email: " + n.getEmail();
         }
         return "User  not found.";
     }
@@ -344,6 +343,11 @@ public class User {
             System.out.println("Error checking block status: " + e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    public void run(){
+        return; //changed things
     }
 
 }
