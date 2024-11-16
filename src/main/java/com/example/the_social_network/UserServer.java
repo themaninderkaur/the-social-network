@@ -1,6 +1,11 @@
 package com.example.the_social_network;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.sql.*;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,6 +16,8 @@ public class UserServer implements Runnable {
     private final Scanner s = new Scanner(System.in);
     private final ArrayList<String> blockedList = new ArrayList<>();
     private final ArrayList<String> friendsList = new ArrayList<>();
+    private static final int PORT = 5000; // Port number for the server
+    private ServerSocket serverSocket;
 
     // Database connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/social_network"; // Change to your database name
@@ -26,6 +33,13 @@ public class UserServer implements Runnable {
     public UserServer() {
         this.username = "";
         this.password = "";
+
+        try {
+            serverSocket = new ServerSocket(PORT);
+            System.out.println("Server started, waiting for clients...");
+        } catch (IOException e) {
+            System.out.println("Error starting server: " + e.getMessage());
+        }
     }
 
     // Method to establish a database connection
@@ -64,109 +78,6 @@ public class UserServer implements Runnable {
 
         System.out.println("Too many attempts were made. Try again later.");
         return false;
-    }
-
-    public void signUp() {
-        String user;
-        String pass;
-        String email; // Declare the email variable
-        boolean userValid = false;
-        boolean passValid = false;
-        boolean emailValid = false;
-
-        // Username validation
-        do {
-            System.out.println("Enter a username. Usernames must be 6-30 characters long and contain only letters/numbers.");
-            user = s.nextLine();
-
-            if (findUser (user)) {
-                System.out.println("Username is already taken.");
-            } else if (user.length() < 6) {
-                System.out.println("Username is too short.");
-            } else if (user.length() > 30) {
-                System.out.println("Username is too long.");
-            } else if (!user.matches("([A-Za-z0-9])*")) {
-                System.out.println("Username must consist only of letters and numbers.");
-            } else {
-                username = user;
-                userValid = true;
-            }
-        } while (!userValid);
-
-        // Password validation
-        do {
-            System.out.println("Enter a password. Passwords must be 8-128 characters, and can only be made out of letters/numbers.");
-            pass = s.nextLine();
-
-            if (pass.length() < 8) {
-                System.out.println("Passwords must be at least 8 characters long.");
-            } else if (pass.length() > 128) {
-                System.out.println("Passwords must be less than 128 characters long.");
-            } else if (!pass.matches("([A-Za-z0-9])*")) {
-                System.out.println("Password must consist only of letters and numbers.");
-            } else {
-                password = pass;
-                passValid = true;
-            }
-        } while (!passValid);
-
-        // Email validation
-        do {
-            System.out.println("Enter your email address.");
-            email = s.nextLine();
-
-            // Check if the email is valid and unique
-            if (email.isEmpty() || !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-                System.out.println("Please enter a valid email address.");
-            } else if (isEmailTaken(email)) { // Check if the email is already in use
-                System.out.println("Email is already taken.");
-            } else {
-                emailValid = true;
-            }
-        } while (!emailValid); //makes sure its valid
-
-        // Database insertion
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Users (username, pass, email) VALUES (?, ?, ?)")) {
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setString(3, email); // Use the email variable here
-            stmt.executeUpdate();
-            System.out.println("User  created.");
-        } catch (SQLException e) {
-            System.out.println("Error creating user: " + e.getMessage());
-        }
-    }
-
-    // Method to check if the email is already taken
-    private boolean isEmailTaken(String email) {
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM Users WHERE email = ?")) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0; // Return true if the email count is greater than 0
-            }
-        } catch (SQLException e) {
-            System.out.println("Error checking email: " + e.getMessage());
-        }
-        return false; // Return false if there was an error or the email is not taken
-    }
-
-    private boolean findUser (String username) {
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users WHERE username = ?")) {
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-            return rs.next(); // Returns true if a user with the given username exists
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static void main(String[] args) {
-        User n = new User(); //test comment
     }
 
     public boolean removeBlockedUser (String user) {
@@ -299,37 +210,7 @@ public class UserServer implements Runnable {
         }
     }
 
-    // Friend Management Methods
-    public boolean addFriend(String friendUsername) {
-        String sql = "INSERT INTO Friends (user, friend) VALUES (?, ?)";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, friendUsername);
-            pstmt.executeUpdate();
-            System.out.println("Friend added successfully.");
-            return true;
-        } catch (SQLException e) {
-            System.out.println("Error adding friend: " + e.getMessage());
-            return false;
-        }
-    }
-
     // Blocking Methods with Database Persistence
-    public boolean addBlockedUser (String blockUsername) {
-        String sql = "INSERT INTO BlockedUsers (user, blockedUser ) VALUES (?, ?)";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, blockUsername);
-            pstmt.executeUpdate();
-            System.out.println("User  blocked successfully.");
-            return true;
-        } catch (SQLException e) {
-            System.out.println("Error blocking user: " + e.getMessage());
-            return false;
-        }
-    }
 
     public boolean isBlocked(String otherUser ) {
         String sql = "SELECT * FROM BlockedUsers WHERE user = ? AND blockedUser  = ?";
@@ -345,9 +226,155 @@ public class UserServer implements Runnable {
         }
     }
 
-    @Override
-    public void run(){
-        return; //changed things
+    public void run() {
+        while (true) {
+            try {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Client connected: " + clientSocket.getInetAddress());
+                new ClientHandler(clientSocket).start(); // Handle client in a new thread
+            } catch (IOException e) {
+                System.out.println("Error accepting client: " + e.getMessage());
+            }
+        }
+    }
+
+    private class ClientHandler extends Thread {
+        private Socket clientSocket;
+        private PrintWriter out;
+        private BufferedReader in;
+        private User currentUser ;
+
+        public ClientHandler(Socket socket) {
+            this.clientSocket = socket;
+        }
+
+        public void run() {
+            try {
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    String[] command = inputLine.split(" ");
+                    switch (command[0]) {
+                        case "LOGIN":
+                            handleLogin(command[1], command[2]);
+                            break;
+                        case "SIGNUP":
+                            handleSignUp(command[1], command[2], command[3]);
+                            break;
+                        case "ADD_FRIEND":
+                            handleAddFriend(command[1]);
+                            break;
+                        case "BLOCK_USER":
+                            handleBlockUser (command[1]);
+                            break;
+                        case "VIEW_FRIENDS":
+                            handleViewFriends();
+                            break;
+                        case "VIEW_BLOCKED":
+                            handleViewBlockedUsers();
+                            break;
+                        case "LOGOUT":
+                            handleLogout();
+                            break;
+                        default:
+                            out.println("Unknown command");
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error in client communication: " + e.getMessage());
+            } finally {
+                try {
+                    clientSocket.close();
+                } catch (IOException e) {
+                    System.out.println("Error closing client socket: " + e.getMessage());
+                }
+            }
+        }
+
+        private void handleLogin(String username, String password) {
+            if (protectedLogin(username, password)) {
+                currentUser  = findProfile(username);
+                out.println("Login successful: " + currentUser .getUsername());
+            } else {
+                out.println("Login failed: Invalid username or password");
+            }
+        }
+
+        private String handleSignUp(String username, String password, String email) {
+            User newUser  = new User(username, password, email);
+            // Call the signUp method from User class
+            if (newUser.signUp()) {
+                String s1 = "Sign up successful";
+                return s1;
+            } else {
+                String s2 = "Sign up failed: Username or email already taken";
+                return s2;
+
+            }
+        }
+
+        private void handleAddFriend(String friendUsername) {
+            if (currentUser  != null && currentUser.addFriend(friendUsername)) {
+                System.out.println("Friend added: " + friendUsername);
+            } else {
+                System.out.println("Failed to add friend");
+            }
+        }
+
+        private void handleBlockUser (String blockUsername) {
+            if (currentUser  != null && currentUser.addBlockedUser (blockUsername)) {
+                System.out.println("User  blocked: " + blockUsername);
+            } else {
+                System.out.println("Failed to block user");
+            }
+        }
+
+        private void handleViewFriends() {
+            if (currentUser  != null) {
+                ArrayList<String> friends = currentUser .getFriends();
+                System.out.println("Friends: " + friends);
+            } else {
+                System.out.println("No user is logged in.");
+            }
+        }
+
+        private void handleViewBlockedUsers() {
+            if (currentUser  != null) {
+                ArrayList<String> blockedUsers = currentUser .getBlocked();
+                System.out.println("Blocked Users: " + blockedUsers);
+            } else {
+                System.out.println("No user is logged in.");
+            }
+        }
+
+        private void handleLogout() {
+            if (currentUser  != null) {
+                System.out.println("Logout successful: " + currentUser .getUsername());
+                currentUser  = null; // Clear the current user
+            } else {
+                out.println("No user is logged in.");
+            }
+        }
+
+        // Placeholder methods for user authentication and profile retrieval
+
+        private boolean protectedLogin(String username, String password) {
+            // Implement your login logic here
+            return true; // Placeholder return value
+        }
+
+        private User findProfile(String username) {
+            // Implement logic to find and return the user profile
+            return new User(username, "dummyPassword", "dummyEmail@example.com"); // Placeholder return value
+        }
+    }
+
+    public static void main(String[] args) {
+        UserServer server = new UserServer();
+        new Thread(server).start(); // Start the server in a new thread
+        User n = new User(); //test comment
     }
 
 }
