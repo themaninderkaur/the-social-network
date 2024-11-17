@@ -8,6 +8,8 @@ Maninder - entire database.sql and the test cases for the sql file. I also worke
 
 Emily - created & coded User.java (signup, login, getters & setters). also edited a little bit of userprofileinterface to fit both userprofile.java & user.java. Wrote basics for directMessage.java. Also created junit test case to run with user.java (for signin & login methods). submitted everything on vocareum workspace for phase one.
 
+Phase two: Edited send-messages & created delete-messages for direct-messages class. Coded UserClient.java
+
 Justin - Created the interfaces for each social media class platform (user, friend, message) and the test cases for the interfaces. Additionally created the Friends class and the jUnit test case to run with it.
 Phase 2 - Made sure that the methods in the other files existed in the User file to ensure that there were no missing methods. Coded test cases for the classes that did not have test cases(User.java and UserSever.java)
 
