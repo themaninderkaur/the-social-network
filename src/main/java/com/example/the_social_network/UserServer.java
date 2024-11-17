@@ -309,8 +309,7 @@ public class UserServer implements Runnable {
                 String s1 = "Sign up successful";
                 return s1;
             } else {
-                String s2 = "Sign up failed: Username or email already taken";
-                return s2;
+                return "Sign up failed: Username or email already taken";
 
             }
         }

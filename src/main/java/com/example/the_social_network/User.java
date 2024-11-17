@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class User implements Serializable {
+public class User implements Serializable, UserInterface{
     private String username;
     private String password;
     private String email;
@@ -58,8 +58,31 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public boolean signUp() {
-        Scanner s = new Scanner(System.in);
+    @Override
+    public void logIn(Scanner scanner) {
+        System.out.print("Enter your username: ");
+        String user = scanner.nextLine();
+        System.out.print("Enter your password: ");
+        String pass = scanner.nextLine();
+
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users WHERE username = ? AND pass = ?")) {
+            stmt.setString(1, user);
+            stmt.setString(2, pass);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("Login successful! Welcome, " + user + "!");
+            } else {
+                System.out.println("Invalid username or password.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error during login: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void signUp(Scanner scanner) {
         String user;
         String pass;
         String email; // Declare the email variable
@@ -70,7 +93,7 @@ public class User implements Serializable {
         // Username validation
         do {
             System.out.println("Enter a username. Usernames must be 6-30 characters long and contain only letters/numbers.");
-            user = s.nextLine();
+            user = scanner.nextLine();
 
             if (findUser (user)) {
                 System.out.println("Username is already taken.");
@@ -89,7 +112,7 @@ public class User implements Serializable {
         // Password validation
         do {
             System.out.println("Enter a password. Passwords must be 8-128 characters, and can only be made out of letters/numbers.");
-            pass = s.nextLine();
+            pass = scanner.nextLine();
 
             if (pass.length() < 8) {
                 System.out.println("Passwords must be at least 8 characters long.");
@@ -106,7 +129,7 @@ public class User implements Serializable {
         // Email validation
         do {
             System.out.println("Enter your email address.");
-            email = s.nextLine();
+            email = scanner.nextLine();
 
             // Check if the email is valid and unique
             if (email.isEmpty() || !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
@@ -114,22 +137,22 @@ public class User implements Serializable {
             } else if (isEmailTaken(email)) { // Check if the email is already in use
                 System.out.println("Email is already taken.");
             } else {
+                this.email = email; // Set the email
                 emailValid = true;
             }
-        } while (!emailValid); //makes sure its valid
+        } while (!emailValid); // Makes sure it's valid
 
         // Database insertion
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement("INSERT INTO Users (username, pass, email) VALUES (?, ?, ?)")) {
             stmt.setString(1, username);
             stmt.setString(2, password);
-            stmt.setString(3, email); // Use the email variable here
+            stmt.setString(3, this.email); // Use the email variable here
             stmt.executeUpdate();
-            System.out.println("User  created.");
+            System.out.println("User  created successfully.");
         } catch (SQLException e) {
             System.out.println("Error creating user: " + e.getMessage());
         }
-        return userValid;
     }
 
     private boolean findUser (String username) {

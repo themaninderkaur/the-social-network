@@ -4,13 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e4bd3c8c-9d27-492f-ad20-8bb16b4ef06c" name="Changes" comment="did stuff">
+    <list default="true" id="e4bd3c8c-9d27-492f-ad20-8bb16b4ef06c" name="Changes" comment="created User.java methods and UserServer methods">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/the_social_network/MessageServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/the_social_network/UserInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/the_social_network/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/the_social_network/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/the_social_network/UserServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/the_social_network/UserServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -140,7 +152,7 @@
       <updated>1731166353123</updated>
       <workItem from="1731166355020" duration="2000" />
       <workItem from="1731187735703" duration="12220000" />
-      <workItem from="1731626688845" duration="9257000" />
+      <workItem from="1731626688845" duration="14276000" />
     </task>
     <task id="LOCAL-00001" summary="New">
       <option name="closed" value="true" />
@@ -222,11 +234,41 @@
       <option name="project" value="LOCAL" />
       <updated>1731627861633</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="created User.java methods and UserServer methods">
+      <option name="closed" value="true" />
+      <created>1731781392726</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1731781392727</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="GitHub.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -237,6 +279,7 @@
     <MESSAGE value="readme added" />
     <MESSAGE value="database changes" />
     <MESSAGE value="did stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="did stuff" />
+    <MESSAGE value="created User.java methods and UserServer methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="created User.java methods and UserServer methods" />
   </component>
 </project>
