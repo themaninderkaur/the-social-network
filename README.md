@@ -1,7 +1,12 @@
 # CS-180-Team-Project
 
 ## Instructions
-In order to compile the project, you need to type javac into the terminal followed by the java file name and .java. An example of this is javac TestFile.java. After you enter this line, the driver will be compiled and ready to run. Next, you must type java followed by the same file name to execute the program. An example of this is java TestFile. Following this, the program will run and you should see the input screen in the terminal below the line you just entered. Please follow the menus and input what you'd like to execute based on the program's offerings.
+In order to compile the project, you need to type javac into the terminal followed by the java file name and .java. An example of this is javac TestFile.java. After you enter this line, the driver will be compiled and ready to run. Next, you must type java followed by the same file name to execute the program. An example of this is java TestFile. Following this, the program will run and you should see the input screen in the terminal below the line you just entered. Please follow the menus and input what you'd like to execute based on the program's offerings. If you want to see the database you must download mysql first, then in the terminal of your choosing type 
+
+mysql-u accessuser -h localhost -p -> When instructed for a password typed 12345. You're in the database! Then type:
+USE social_network -> social_network is the name of the database
+SELECT * FROM <Name of the Table> -> There are 4 options: Users, Friends, Message and Blocked. This command will showcase everything in that table. 
+
 
 ## Contributions
 Maninder - entire database.sql and the test cases for the sql file. I also worked on the implementation of the SQL in the java files. For phase 2, she made both server files, fixed some mistakes from phase 1.
