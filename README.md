@@ -4,7 +4,7 @@
 In order to compile the project, you need to type javac into the terminal followed by the java file name and .java. An example of this is javac TestFile.java. After you enter this line, the driver will be compiled and ready to run. Next, you must type java followed by the same file name to execute the program. An example of this is java TestFile. Following this, the program will run and you should see the input screen in the terminal below the line you just entered. Please follow the menus and input what you'd like to execute based on the program's offerings.
 
 ## Contributions
-Maninder - entire database.sql and the test cases for the sql file. I also worked on the implementation of the SQL in the java files
+Maninder - entire database.sql and the test cases for the sql file. I also worked on the implementation of the SQL in the java files. For phase 2, she made both server files, fixed some mistakes from phase 1.
 
 Emily - created & coded User.java (signup, login, getters & setters). also edited a little bit of userprofileinterface to fit both userprofile.java & user.java. Wrote basics for directMessage.java. Also created junit test case to run with user.java (for signin & login methods). submitted everything on vocareum workspace for phase one.
 
@@ -25,10 +25,7 @@ User- The user class holds all the contructers and methods related to the user. 
 - email: Unique email address for the user.
 - bio: A short string (up to 150 charecters) for user expression.
 - created_at: Timestamp of when the user account was created.
-
-Alongside methods that
-
-Friend- Uses a user object but is different from the User. The friend will hold all the methods that include all the adding friends, blocking friends, pending friend requests. The Friend object will also have the following attributes:
+(PART OF USER CLASS NOW)Friend- Uses a user object but is different from the User. The friend will hold all the methods that include all the adding friends, blocking friends, pending friend requests. The Friend object will also have the following attributes:
 - user_id: ID of the user who initiated the friendship.
 - friend_id: ID of the user being added as a friend.
 - status: Status of the friendship (e.g., 'pending', 'accepted', 'blocked').
@@ -73,6 +70,15 @@ void signUp() - allows a new user to sign up with specific username & password r
 
 boolean findUser() - a private method to find the user by going through the file accountInfo.txt using the scanner class.
 
+addFriend(String user, String friendUser); - adds a friend based on the username inputted
+** returns true if done, false if not
+
+blockFriend(String user, String blockedUser) - blocks a friend based on the username inputted
+** returns true if done, false if not
+
+removeFriend(String user, String friendUser) - removes a friend based on the username inputted
+** returns true if done, false if not
+
 ## Class: directMessage.java
 
 sendMessage (User sender, User recipient, String message); - sends a message from sender to recipetent. returns true if successful, false if not
@@ -86,16 +92,6 @@ blockUser(User sender, String username); - has username added to sender's blocke
 
 restricted(boolean restricted) - sets restricted to parameter.
 
-## Class: Friends.java
-
-addFriend(String user, String friendUser); - adds a friend based on the username inputted
-** returns true if done, false if not
-
-blockFriend(String user, String blockedUser) - blocks a friend based on the username inputted
-** returns true if done, false if not
-
-removeFriend(String user, String friendUser) - removes a friend based on the username inputted
-** returns true if done, false if not
 
 ## Database
-We have created a database.sql which will only be implemnted once. This file will create tabls (another file has corresponding test cases). The sql table works like an excel spreadsheet. Each column is assigned a variable value (user_id, profile_pic, etc.), and each row corresponds with each of the user's created and currenly created within our social media platform. We have created example implmentations within the data files to showcase how varibles will be pushed. Later down the road, we will actually create this and get variables, set variables, etc. create.sql CREATES the database and database.sql actaully is the database in sql that was downloaded. It would be better shown as a .csv file later on. Creation of the database was made by mysql and the terminal, where the testcases were also ran on a backup database. 
+We have created a database.sql which will only be implemnted once. This file will create tabls (another file has corresponding test cases). The sql table works like an excel spreadsheet. Each column is assigned a variable value (user_id, profile_pic, etc.), and each row corresponds with each of the user's created and currenly created within our social media platform. We have created example implmentations within the data files to showcase how varibles will be pushed. Later down the road, we will actually create this and get variables, set variables, etc. create.sql CREATES the database and database.sql actaully is the database in sql that was downloaded. It would be better shown as a .csv file later on. Creation of the database was made by mysql and the terminal, where the testcases were also ran on a backup database. To access the database, you must configure it. In each file there are instructions to do so. You can contact it from localhost through the username 'accessuser', port 3306, and the password 12345. 
