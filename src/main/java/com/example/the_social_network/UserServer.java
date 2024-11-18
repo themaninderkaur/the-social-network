@@ -47,7 +47,7 @@ public class UserServer implements Runnable {
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
 
-    public boolean login() {
+    public synchronized boolean login() {
         String user;
         String pass;
         int count = 0;
@@ -80,7 +80,7 @@ public class UserServer implements Runnable {
         return false;
     }
 
-    public boolean removeBlockedUser (String user) {
+    public synchronized boolean removeBlockedUser (String user) {
         if (blockedList.remove(user)) {
             // Remove from BlockedUsers table
             try (Connection conn = connect();
@@ -108,7 +108,7 @@ public class UserServer implements Runnable {
         return friendsList;
     }
 
-    public boolean removeFriend(String user) {
+    public synchronized boolean removeFriend(String user) {
         if (friendsList.remove(user)) {
             // Remove from Friends table
             try (Connection conn = connect();
@@ -129,7 +129,7 @@ public class UserServer implements Runnable {
     }
 
     // Helper method to get user_id by username
-    private long getUserId(String username) {
+    private synchronized long getUserId(String username) {
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement("SELECT user_id FROM Users WHERE username = ?")) {
             stmt.setString(1, username);
@@ -144,7 +144,7 @@ public class UserServer implements Runnable {
     }
 
     // UserProfile methods integrated into User class
-    public User createProfile(String username, String password, String email) {
+    public synchronized User createProfile(String username, String password, String email) {
         String sql = "INSERT INTO Users (username, pass, email) VALUES (?, ?, ?)";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -160,7 +160,7 @@ public class UserServer implements Runnable {
         }
     }
 
-    public User findProfile(String username) {
+    public synchronized User findProfile(String username) {
         String sql = "SELECT * FROM Users WHERE username = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -184,7 +184,7 @@ public class UserServer implements Runnable {
         return "User  not found.";
     }
 
-    public boolean protectedLogin(String username, String password) {
+    public synchronized boolean protectedLogin(String username, String password) {
         String sql = "SELECT * FROM Users WHERE username = ? AND pass = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -198,7 +198,7 @@ public class UserServer implements Runnable {
         }
     }
 
-    public void deleteProfile(String username) {
+    public synchronized void deleteProfile(String username) {
         String sql = "DELETE FROM Users WHERE username = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -212,7 +212,7 @@ public class UserServer implements Runnable {
 
     // Blocking Methods with Database Persistence
 
-    public boolean isBlocked(String otherUser ) {
+    public synchronized boolean isBlocked(String otherUser ) {
         String sql = "SELECT * FROM BlockedUsers WHERE user = ? AND blockedUser  = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -17,7 +17,7 @@ public class MessageServer {
      * @param username the username of the new user
      * @return true if the user was successfully registered, false if the username already exists
      */
-    public boolean registerUser (String username) {
+    public synchronized boolean registerUser (String username) {
         if (users.containsKey(username)) {
             System.out.println("Username already exists. Please choose a different username.");
             return false;

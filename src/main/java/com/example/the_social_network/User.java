@@ -82,7 +82,7 @@ public class User implements Serializable, UserInterface{
     }
 
     @Override
-    public void signUp(Scanner scanner) {
+    public synchronized void signUp(Scanner scanner) {
         String user;
         String pass;
         String email; // Declare the email variable
@@ -155,7 +155,7 @@ public class User implements Serializable, UserInterface{
         }
     }
 
-    private boolean findUser (String username) {
+    private synchronized boolean findUser (String username) {
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users WHERE username = ?")) {
             stmt.setString(1, username);
@@ -168,7 +168,7 @@ public class User implements Serializable, UserInterface{
     }
 
     // Method to check if the email is already taken
-    private boolean isEmailTaken(String email) {
+    private synchronized boolean isEmailTaken(String email) {
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM Users WHERE email = ?")) {
             stmt.setString(1, email);
@@ -182,7 +182,7 @@ public class User implements Serializable, UserInterface{
         return false; // Return false if there was an error or the email is not taken
     }
 
-    public boolean addFriend(String friendUsername) {
+    public synchronized boolean addFriend(String friendUsername) {
         String sql = "INSERT INTO Friends (user, friend) VALUES (?, ?)";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -197,7 +197,7 @@ public class User implements Serializable, UserInterface{
         }
     }
 
-    public boolean addBlockedUser (String blockUsername) {
+    public synchronized boolean addBlockedUser (String blockUsername) {
         String sql = "INSERT INTO BlockedUsers (user, blockedUser ) VALUES (?, ?)";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -212,7 +212,7 @@ public class User implements Serializable, UserInterface{
         }
     }
 
-    public ArrayList<String> getBlocked() {
+    public synchronized ArrayList<String> getBlocked() {
         ArrayList<String> blockedUsers = new ArrayList<>();
         String sql = "SELECT blockedUser  FROM BlockedUsers WHERE user = ?";
         try (Connection conn = connect();
@@ -228,7 +228,7 @@ public class User implements Serializable, UserInterface{
         return blockedUsers;
     }
 
-    public ArrayList<String> getFriends() {
+    public synchronized ArrayList<String> getFriends() {
         ArrayList<String> friends = new ArrayList<>();
         String sql = "SELECT friend FROM Friends WHERE user = ?";
         try (Connection conn = connect();

@@ -23,7 +23,7 @@ public class directMessage implements MessagingInterface {
      * @return true if the message was sent, false if blocked or restricted
      */
     @Override
-    public boolean sendMessage(User sender, User recipient, String message) {
+    public synchronized boolean sendMessage(User sender, User recipient, String message) {
         ArrayList<String> newMessage = new ArrayList<String>();
         boolean dmExists = false;
         // Check if the recipient has blocked the sender
@@ -80,7 +80,7 @@ public class directMessage implements MessagingInterface {
      * @param username the username of the person to be blocked
      * @return true if the user was successfully blocked
      */
-    public boolean blockMessenger(User sender, String username) {
+    public synchronized boolean blockMessenger(User sender, String username) {
         boolean success = sender.addBlockedUser(username);
         if (success) {
             System.out.println(sender.getUser() + " has blocked " + username);
@@ -111,7 +111,7 @@ public class directMessage implements MessagingInterface {
      * @param message
      * @return
      */
-    public boolean deleteMessage(User sender, User recipient, String message) {
+    public synchronized boolean deleteMessage(User sender, User recipient, String message) {
         if (allMessages.size() == 0) {
             return false;
         } else {
