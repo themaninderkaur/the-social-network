@@ -20,7 +20,8 @@ Phase two: Edited send-messages & created delete-messages for direct-messages cl
 Justin - Created the interfaces for each social media class platform (user, friend, message) and the test cases for the interfaces. Additionally created the Friends class and the jUnit test case to run with it.
 Phase 2 - Made sure that the methods in the other files existed in the User file to ensure that there were no missing methods. Coded test cases for the classes that did not have test cases(User.java and UserSever.java)
 
-Adi - User Blocking: Added methods in User class to block and unblock users, preventing blocked users from sending messages. Message Restriction: Enabled users to restrict messages to friends only through setRestrictMessagesToFriendsOnly and isMessageRestrictionEnabled methods. Interface and Messaging Updates: Updated MessagingInterface to support message restrictions and modified directMessage to enforce both blocking and friend-only messaging rules.
+Adi - (Phase 1 - Phase2 )User Blocking: Added methods in User class to block and unblock users, preventing blocked users from sending messages. Message Restriction: Enabled users to restrict messages to friends only through setRestrictMessagesToFriendsOnly and isMessageRestrictionEnabled methods. Interface and Messaging Updates: Updated MessagingInterface to support message restrictions and modified directMessage to enforce both blocking and friend-only messaging rules.
+Phase 2: I made the directMessage class thread-safe by synchronizing methods that access or modify the shared allMessages list. This ensures consistent and correct behavior when multiple threads interact with the messaging operations.
 
 Compatibility Assurance: Ensured seamless integration across User, MessagingInterface, and directMessage classes.
 
