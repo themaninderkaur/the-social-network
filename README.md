@@ -5,7 +5,9 @@ In order to compile the project, you need to type javac into the terminal follow
 
 mysql-u accessuser -h localhost -p -> When instructed for a password typed 12345. You're in the database! Then type:
 USE social_network -> social_network is the name of the database
-SELECT * FROM <Name of the Table> -> There are 4 options: Users, Friends, Message and Blocked. This command will showcase everything in that table. 
+SELECT * FROM <Name of the Table> -> There are 4 options: Users, Friends, Messages and Blocked. This command will showcase everything in that table. 
+
+NOTE: Currently only Users have example data in them. We have tested and removed from the other 3 already. When testing there are two usernames that are currently applicable: Kaurman and JDerosa
 
 
 ## Contributions
